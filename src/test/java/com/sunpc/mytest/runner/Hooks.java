@@ -45,6 +45,9 @@ public class Hooks {
     @Value("${selenium.browser.remote}")
     private String remote;
 
+    @Value("${selenium.remote.url}")
+    private String remoteUrl;
+
     @Value("${selenium.browser.screenshot}")
     private String screenshot;
 
@@ -137,13 +140,15 @@ public class Hooks {
         // Remote mode
         if ("grid".equals(remote)) {
             try {
-                driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), chromeOptions);
+                driver = new RemoteWebDriver(new URL(remoteUrl), chromeOptions);
             } catch (MalformedURLException e) {
                 LOGGER.error("Error", e);
             }
         } else {
             driver = new ChromeDriver(chromeOptions);
         }
+
+        driver.manage().window().maximize();
         wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 
@@ -177,7 +182,17 @@ public class Hooks {
             edgeOptions.addArguments("--window-size=1920x1080");
         }
 
-        driver = new EdgeDriver(edgeOptions);
+        // Remote mode
+        if ("grid".equals(remote)) {
+            try {
+                driver = new RemoteWebDriver(new URL(remoteUrl), edgeOptions);
+            } catch (MalformedURLException e) {
+                LOGGER.error("Error", e);
+            }
+        } else {
+            driver = new EdgeDriver(edgeOptions);
+        }
+
         driver.manage().window().maximize();
         wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
