@@ -6,10 +6,11 @@ import com.sunpc.mytest.runner.Hooks;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.apache.commons.lang3.StringUtils;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,8 @@ public class BaseSteps {
     @Autowired
     private List<BasePage> pages;
 
+    private BasePage basePage;
+
     @Before(order = 1)
     public void logBeforeScenario(final Scenario scenario) {
         LOGGER.debug(StringUtils.rightPad("Starting scenario:", 20) + "[{}] - [{}]",
@@ -39,11 +42,16 @@ public class BaseSteps {
     }
 
     @Before(order = 2)
-    public void initializeDriver() {
+    public void initializeDriver(final Scenario scenario) {
         final WebDriver driver = hooks.getDriver();
 
-        // Initialize all page elements
-        pages.forEach(p -> initElements(driver, p));
+        // Initialize page elements
+        pages.forEach(p -> {
+            if (p.getClass().getSimpleName().equals(getFeatureName(scenario) + "Page")) {
+                initElements(driver, p);
+                basePage = p;
+            }
+        });
         // --
     }
 
@@ -61,14 +69,29 @@ public class BaseSteps {
                 scenario.getStatus());
     }
 
-    @Given("a user visiting {string}")
+    @Given("a user visits {string}")
     public void aUserVisiting(String baseUrl) {
         hooks.getDriver().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
         hooks.getDriver().navigate().to(baseUrl);
     }
 
+    @Given("a user types {string} in the {string}")
+    public void aUserTypingInInput(String searchValue, String webElement) throws NoSuchFieldException, IllegalAccessException {
+        basePage.sendKeys(searchValue, webElement);
+    }
+
+    @When("clicks the {string} button")
+    public void clickButton(String webElement) throws NoSuchFieldException, IllegalAccessException {
+        basePage.click(webElement);
+    }
+
+    @Then("results are displayed in {string}")
+    public void resultsAreDisplayed(String webElement) throws NoSuchFieldException, IllegalAccessException {
+        basePage.assertWebElementPresent(webElement);
+    }
+
     private String getFeatureName(Scenario scenario) {
-        String featureName = scenario.getId();
+        String featureName = scenario.getUri().toString();
 
         featureName = StringUtils.substringBeforeLast(featureName, ".feature");
         featureName = StringUtils.substringAfterLast(featureName, "/");
