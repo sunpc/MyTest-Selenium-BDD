@@ -1,12 +1,13 @@
-package com.sunpc.mytest.base;
+package com.sunpc.mytest.helper;
 
 import static org.openqa.selenium.support.PageFactory.initElements;
 
+import com.sunpc.mytest.annotation.MyTestPage;
+import com.sunpc.mytest.base.BasePage;
 import com.sunpc.mytest.runner.Hooks;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -19,12 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.Duration;
 import java.util.List;
 
-public class BaseSteps {
+public class StepHelper {
 
     /**
      * Logger
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(BaseSteps.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StepHelper.class);
 
     @Autowired
     private Hooks hooks;
@@ -32,7 +33,8 @@ public class BaseSteps {
     @Autowired
     private List<BasePage> pages;
 
-    private BasePage basePage;
+    @Autowired
+    private PageHelper pageHelper;
 
     @Before(order = 1)
     public void logBeforeScenario(final Scenario scenario) {
@@ -47,9 +49,12 @@ public class BaseSteps {
 
         // Initialize page elements
         pages.forEach(p -> {
-            if (p.getClass().getSimpleName().equals(getFeatureName(scenario) + "Page")) {
+            if (p.getClass().isAnnotationPresent(MyTestPage.class)
+                    && (p.getClass().getAnnotation(MyTestPage.class).value().equals(this.getFeatureName(scenario))
+                    || (p.getClass().getAnnotation(MyTestPage.class).value().isEmpty()
+                    && p.getClass().getSimpleName().equals(this.getFeatureName(scenario).concat("Page"))))) {
                 initElements(driver, p);
-                basePage = p;
+                pageHelper.setPage(p);
             }
         });
         // --
@@ -77,17 +82,17 @@ public class BaseSteps {
 
     @Given("a user types {string} in the {string}")
     public void aUserTypingInInput(String searchValue, String webElement) throws NoSuchFieldException, IllegalAccessException {
-        basePage.sendKeys(searchValue, webElement);
+        pageHelper.sendKeys(searchValue, webElement);
     }
 
     @When("clicks the {string} button")
     public void clickButton(String webElement) throws NoSuchFieldException, IllegalAccessException {
-        basePage.click(webElement);
+        pageHelper.click(webElement);
     }
 
     @Then("results are displayed in {string}")
     public void resultsAreDisplayed(String webElement) throws NoSuchFieldException, IllegalAccessException {
-        basePage.assertWebElementPresent(webElement);
+        pageHelper.assertWebElementPresent(webElement);
     }
 
     private String getFeatureName(Scenario scenario) {

@@ -1,13 +1,13 @@
 package com.sunpc.mytest.pages;
 
+import com.sunpc.mytest.annotation.MyTestPage;
 import com.sunpc.mytest.base.BasePage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
-import org.springframework.stereotype.Component;
 
-@Component
-public class SearchBaiduPage extends BasePage {
+@MyTestPage
+public class SearchBaiduPage implements BasePage {
 
     @FindBy(how = How.CSS, using = "#kw")
     private WebElement searchInput;
