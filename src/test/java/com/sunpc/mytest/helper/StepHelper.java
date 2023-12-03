@@ -4,7 +4,7 @@ import static org.openqa.selenium.support.PageFactory.initElements;
 
 import com.sunpc.mytest.annotation.MyTestPage;
 import com.sunpc.mytest.base.BasePage;
-import com.sunpc.mytest.runner.Hooks;
+import com.sunpc.mytest.runner.SeleniumHooks;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
@@ -28,7 +28,7 @@ public class StepHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(StepHelper.class);
 
     @Autowired
-    private Hooks hooks;
+    private SeleniumHooks hooks;
 
     @Autowired
     private List<BasePage> pages;

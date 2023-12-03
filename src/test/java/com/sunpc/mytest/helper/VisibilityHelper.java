@@ -3,7 +3,7 @@ package com.sunpc.mytest.helper;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
-import com.sunpc.mytest.runner.Hooks;
+import com.sunpc.mytest.runner.SeleniumHooks;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class VisibilityHelper {
 
     @Autowired
-    private Hooks hooks;
+    private SeleniumHooks hooks;
 
     /**
      * Waits until the given element is visible.

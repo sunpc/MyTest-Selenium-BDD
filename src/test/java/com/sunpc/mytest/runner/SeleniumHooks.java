@@ -29,12 +29,12 @@ import org.springframework.stereotype.Component;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 @Component
-public class Hooks {
+public class SeleniumHooks {
 
     /**
      * Logger
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(Hooks.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SeleniumHooks.class);
 
     @Value("${selenium.browser}")
     private String browser;
