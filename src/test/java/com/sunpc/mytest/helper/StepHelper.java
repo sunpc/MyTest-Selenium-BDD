@@ -50,9 +50,9 @@ public class StepHelper {
         // Initialize page elements
         pages.forEach(p -> {
             if (p.getClass().isAnnotationPresent(MyTestPage.class)
-                    && (p.getClass().getAnnotation(MyTestPage.class).value().equals(this.getFeatureName(scenario))
+                    && (p.getClass().getAnnotation(MyTestPage.class).value().equals(getPageName(scenario))
                     || (p.getClass().getAnnotation(MyTestPage.class).value().isEmpty()
-                    && p.getClass().getSimpleName().equals(this.getFeatureName(scenario).concat("Page"))))) {
+                    && p.getClass().getSimpleName().equals(getPageName(scenario))))) {
                 initElements(driver, p);
                 pageHelper.setPage(p);
             }
@@ -102,6 +102,18 @@ public class StepHelper {
         featureName = StringUtils.substringAfterLast(featureName, "/");
 
         return featureName;
+    }
+
+    private String getPageName(Scenario scenario) {
+        String keyword = "Page";
+
+        for (String tag : scenario.getSourceTagNames()) {
+            if (tag.startsWith("@" + keyword + ":")) {
+                return StringUtils.substringAfterLast(tag, ":");
+            }
+        }
+
+        return getFeatureName(scenario);
     }
 
 }

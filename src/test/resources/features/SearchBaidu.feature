@@ -1,5 +1,4 @@
-@WebUI
-@SearchBaidu
+@WebUI @Page:SearchBaiduPage
 Feature: Search in Baidu.com
 
   Scenario: User can do a search from the Baidu home page

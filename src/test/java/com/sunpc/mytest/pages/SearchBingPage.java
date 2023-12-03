@@ -6,7 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
-@MyTestPage("SearchBing")
+@MyTestPage("SearchBingPage")
 public class SearchBingPage implements BasePage {
 
     @FindBy(how = How.CSS, using = "#sb_form_q")
