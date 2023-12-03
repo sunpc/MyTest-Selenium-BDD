@@ -1,3 +1,4 @@
+@WebUI
 @SearchBaidu
 Feature: Search in Baidu.com
 

@@ -43,7 +43,7 @@ public class StepHelper {
                 scenario.getName());
     }
 
-    @Before(order = 2)
+    @Before(value = "@WebUI", order = 2)
     public void initializeDriver(final Scenario scenario) {
         final WebDriver driver = hooks.getDriver();
 
@@ -60,7 +60,7 @@ public class StepHelper {
         // --
     }
 
-    @After(order = 1)
+    @After(value = "@WebUI", order = 1)
     public void closeDriver(final Scenario scenario) {
         hooks.tearDown(scenario);
         hooks.closeDriver();

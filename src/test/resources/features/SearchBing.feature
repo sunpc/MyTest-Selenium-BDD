@@ -1,3 +1,4 @@
+@WebUI
 @SearchBing
 Feature: Search in Bing.com
 
